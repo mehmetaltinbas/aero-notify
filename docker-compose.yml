@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  aero-notify-db:
+    image: postgres:16
+    container_name: aero-notify-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aeronotify
+      POSTGRES_USER: aeronotify_user
+      POSTGRES_PASSWORD: aeronotify_pass
+    ports:
+      - "55432:5432"   # custom port to avoid conflicts
+    volumes:
+      - aero_notify_pgdata:/var/lib/postgresql/data
+
+volumes:
+  aero_notify_pgdata:
