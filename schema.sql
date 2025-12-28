@@ -14,14 +14,13 @@ CREATE TABLE IF NOT EXISTS flights (
 
     "flightNumber" INTEGER NOT NULL,
     "flightDate" DATE NOT NULL,
-    "arrivalIata" TEXT NOT NULL,
+    "departureScheduled" DATE NOT NULL,
 
     status TEXT NOT NULL,
-    delay INTEGER NOT NULL DEFAULT 0,
 
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    UNIQUE ("flightNumber", "flightDate", "arrivalIata")
+    UNIQUE ("flightNumber", "flightDate", "departureScheduled")
 );
 
 CREATE TABLE IF NOT EXISTS subscriptions (

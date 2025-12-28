@@ -3,7 +3,5 @@ import { AviationstackFlightStatus } from "@/features/flights/types/aviataion-st
 export interface FlightDbRow {
     flightNumber: number;
     flightDate: Date;
-    arrivalIata: string;
     status: AviationstackFlightStatus;
-    delay: number;
 }
