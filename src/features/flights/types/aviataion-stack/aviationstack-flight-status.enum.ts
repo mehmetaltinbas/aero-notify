@@ -1,4 +1,4 @@
-export enum FlightStatus {
+export enum AviationstackFlightStatus {
     Scheduled = "scheduled",
     Active = "active",
     Cancelled = "cancelled",

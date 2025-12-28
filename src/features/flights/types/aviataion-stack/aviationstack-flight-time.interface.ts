@@ -1,4 +1,4 @@
-export interface FlightTime {
+export interface AviationstackFlightTime {
     airport: string;
     timezone: string;
     iata: string;

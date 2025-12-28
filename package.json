@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "tsx server.ts",
+        "dev:debug": "tsx --inspect server.ts",
         "build": "next build",
         "start": "NODE_ENV=production node --loader tsx server.ts",
         "lint": "eslint",

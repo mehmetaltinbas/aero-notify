@@ -1,9 +1,9 @@
-import { FlightStatus } from "@/features/flights/types/aviataion-stack/flight-status.enum";
+import { AviationstackFlightStatus } from "@/features/flights/types/aviataion-stack/aviationstack-flight-status.enum";
 
 export interface FlightDbRow {
     flightNumber: number;
     flightDate: Date;
     arrivalIata: string;
-    status: FlightStatus;
+    status: AviationstackFlightStatus;
     delay: number;
 }

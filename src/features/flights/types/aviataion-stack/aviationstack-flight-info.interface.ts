@@ -1,4 +1,4 @@
-export interface FlightInfo {
+export interface AviationstackFlightInfo {
     number: string;
     iata: string;
     icao: string;

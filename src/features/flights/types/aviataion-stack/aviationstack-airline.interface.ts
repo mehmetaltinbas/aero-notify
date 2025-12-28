@@ -1,4 +1,4 @@
-export interface Airline {
+export interface AviationstackAirline {
     name: string;
     iata: string;
     icao: string;

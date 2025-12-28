@@ -1,20 +1,21 @@
 import { db } from "@/db";
 import { EUROPEAN_TIMEZONES } from "@/features/flights/constants/european-timezones.constant";
-import { FlightData } from "@/features/flights/types/aviataion-stack/flight-data.interface";
+import { AviationstackFlightData } from "@/features/flights/types/aviataion-stack/aviationstack-flight-data.interface";
+import { AviataionstackFlightsResponse } from "@/features/flights/types/aviataion-stack/aviationstack-flights-response.interface";
 import { FlightDbRow } from "@/features/flights/types/flight-db-row.interface";
 
 // cron job
 export async function fetchAndUpdateFlights(): Promise<void> {
+    debugger;
     console.log('🛫 Fetching flights...');
     
-    const response = await fetch(`${process.env.AVIATIONSTACK_API_URL}?access_key=${process.env.AVIATONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST`);
-    const data = await response.json();
+    const response = await (await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)).json() as AviataionstackFlightsResponse;
     
     // Filter only European timezone flights
-    const europeanFlights: FlightData[] = data.data.filter((flight: FlightData) => {
+    const europeanFlights: AviationstackFlightData[] = response.data.filter((flight: AviationstackFlightData) => {
         return flight.arrival?.timezone && EUROPEAN_TIMEZONES.includes(flight.arrival.timezone as any);
     });
-    
+
     console.log(`✅ Found ${europeanFlights.length} European flights`);
 
     const { rows: storedFlights } = await db.query<FlightDbRow>(
@@ -42,9 +43,23 @@ export async function fetchAndUpdateFlights(): Promise<void> {
                 [flightInfo.flightNumber, flightInfo.flightDate, flightInfo.arrivalIata, flightInfo.status, flightInfo.delay]
             )
 
+            console.log(`➕ New flight added: TK${flightInfo.flightNumber}`);
+            continue;
+        }
+
+        if (existingFlight.status !== flightInfo.status || existingFlight.delay !== flightInfo.delay) {
+            await db.query(
+                `UPDATE flights
+                SET status = $1, delay = $2
+                WHERE flightNumber = $3 AND flightDate = $4 AND arrivalIata = $5`,
+                [flightInfo.status, flightInfo.delay, flightInfo.flightNumber, flightInfo.flightDate,flightInfo.arrivalIata]
+            );
+
             console.log(`🔔 Flight updated: TK${flightInfo.flightNumber}`);
 
             // TODO: notify subscribed users via email here
         }
     }
+
+    console.log("✅ Flight sync completed");
 }

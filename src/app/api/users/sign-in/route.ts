@@ -1,15 +1,16 @@
 import { db } from '@/db';
 import { ResponseBase } from '@/features/shared/types/response/response-base.response';
+import { SignInDto } from '@/features/users/types/dto/sign-in.dto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    const { email, password } = await req.json();
+    const signInDto = await req.json() as SignInDto;
 
     const { rows } = await db.query(
         `SELECT id, password FROM users WHERE email = $1`,
-        [email]
+        [signInDto.email]
     );
 
     if (!rows.length) {
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const user = rows[0];
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(signInDto.password, user.password);
 
     if (!isValid) {
         return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
