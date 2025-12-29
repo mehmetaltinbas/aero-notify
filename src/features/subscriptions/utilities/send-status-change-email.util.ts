@@ -14,7 +14,7 @@ export async function sendStatusChangeEmail(to: string, flight: FlightDbRow) {
 
     const subject = `Flight TK${flight.flightNumber} status changed`;
     const text = `
-        Flight TK${flight.flightNumber} on ${flight.flightDate.toLocaleString("en-US", { weekday: "long" })} ${flight.flightDate.toLocaleString("en-US", { month: "long" })} ${flight.flightDate.getFullYear()} has changed status to ${flight.status}.
+        Flight TK${flight.flightNumber} on ${flight.flightDate.toLocaleString("en-US", { month: "long" })} ${flight.flightDate.getDate()} ${flight.flightDate.getFullYear()} has changed status to ${flight.status}.
         Departure time: ${flight.departureScheduled.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
     `;
 
