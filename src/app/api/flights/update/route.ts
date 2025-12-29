@@ -20,18 +20,23 @@ export async function GET(req: NextRequest) {
 
     for (const flight of response.data) {
         debugger;
+        console.log(flight.flight_status)
         const flightInfo = {
             flightNumber: Number(flight.flight.number),
-            flightDate: new Date(flight.flight_date),
+            flightDate: `${new Date(flight.flight_date).getFullYear()}-${new Date(flight.flight_date).getMonth() + 1}-${new Date(flight.flight_date).getDate()}`,
             departureScheduled: new Date(flight.departure.scheduled),
-            status: flight.flight_status ?? new Date(flight.departure.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Scheduled : new Date(flight.arrival.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Active : AviationstackFlightStatus.Landed
+            status: flight.flight_status && flight.flight_status !== 'unknown' ? flight.flight_status : (
+                new Date(flight.departure.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Scheduled : new Date(flight.arrival.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Active : AviationstackFlightStatus.Landed
+            ),
         }
 
-        const existingFlight = storedFlights.find(flightDbRow =>
-            flightDbRow.flightNumber === flightInfo.flightNumber &&
-            flightDbRow.flightDate.toISOString().split('T')[0] === flightInfo.flightDate.toISOString().slice(0, 10) &&
+        const existingFlight = storedFlights.find(flightDbRow =>{
+            const storedFlightDate = `${flightDbRow.flightDate.getFullYear()}-${flightDbRow.flightDate.getMonth() + 1}-${flightDbRow.flightDate.getDate()}`
+
+            return flightDbRow.flightNumber === flightInfo.flightNumber &&
+            storedFlightDate === flightInfo.flightDate &&
             flightDbRow.departureScheduled.toISOString() === flightInfo.departureScheduled.toISOString()
-        )
+        })
 
         if (!existingFlight) {
             await db.query(
@@ -51,7 +56,7 @@ export async function GET(req: NextRequest) {
                 [flightInfo.status, flightInfo.flightNumber, flightInfo.flightDate, flightInfo.departureScheduled]
             );
 
-            console.log(`flight updated: TK${flightInfo.flightNumber}`);
+            console.log(`status change on flight TK${flightInfo.flightNumber}, updated to ${flightInfo.status} from ${existingFlight.status}`);
 
             // TODO: notify subscribed users via email here
         }
