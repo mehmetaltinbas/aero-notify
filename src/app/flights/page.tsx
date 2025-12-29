@@ -12,6 +12,14 @@ export default function FlightsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
+    async function fetchFlights() {
+        const response = await (await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights`
+        )).json() as ReadMultipleFlightsResponse;
+        setFlights(response.flights || []);
+        setIsLoading(false);
+    };
+
     useEffect(() => {
         async function fetchFlights() {
             const response = await (await fetch(
@@ -56,7 +64,7 @@ export default function FlightsPage() {
             {/* Flight list */}
             <div className="max-w-3xl mx-auto flex flex-col gap-8">
                 {flights.map((flight, index) => (
-                    <FlightCard key={`flight-${flight.id}-${index}`} flight={flight} />
+                    <FlightCard key={`flight-${flight.id}-${index}`} flight={flight} fetchFlights={fetchFlights} />
                 ))}
             </div>
         </main>

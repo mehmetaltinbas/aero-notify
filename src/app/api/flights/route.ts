@@ -31,7 +31,8 @@ export async function GET(request: NextRequest) {
             .map((f: FlightDbRow) => ({
                 ...f,
                 isSubscribed: subscribedFlightIds.includes(f.id),
-            }));
+            }))
+            .sort((a, b) => a.departureScheduled.getTime() - b.departureScheduled.getTime());
 
         return NextResponse.json({
             isSuccess: true,

@@ -2,7 +2,10 @@ import { FlightDbRow } from "@/features/flights/types/flight-db-row.interface";
 import { BlackButton } from "@/features/shared/components/black-button";
 import { ResponseBase } from "@/features/shared/types/response/response-base.response";
 
-export function FlightCard({ flight }: { flight: FlightDbRow & { isSubscribed: boolean } }) {
+export function FlightCard({ flight, fetchFlights }: { 
+    flight: FlightDbRow & { isSubscribed: boolean };
+    fetchFlights(): Promise<void>
+}) {
     const departureTime = new Date(flight.departureScheduled).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const flightDate = new Date(flight.flightDate).toLocaleDateString('en-US', {
         weekday: 'short',
@@ -20,6 +23,7 @@ export function FlightCard({ flight }: { flight: FlightDbRow & { isSubscribed: b
             body: JSON.stringify({ flightId: flight.id })
         })).json() as ResponseBase;
         alert(response.message);
+        await fetchFlights()
     }
 
     return (
