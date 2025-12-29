@@ -33,6 +33,10 @@ export function proxy(request: NextRequest) {
             };
             return NextResponse.json(response);
         }
+
+        const response = NextResponse.next();
+        response.headers.set('x-user-id', `${decoded.userId}`);
+        return response;
     } catch {
         const response: ResponseBase = {
             isSuccess: false,
@@ -40,8 +44,6 @@ export function proxy(request: NextRequest) {
         };
         return NextResponse.json(response);
     }
-
-    return NextResponse.next();
 }
  
 export const config = {
