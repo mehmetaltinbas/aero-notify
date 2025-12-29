@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function FlightsPage() {
-    const [flights, setFlights] = useState<Array<FlightDbRow>>([]);
+    const [flights, setFlights] = useState<Array<FlightDbRow & { isSubscribed: boolean }>>([]);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
