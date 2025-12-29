@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
 
     for (const flight of response.data) {
         debugger;
-        console.log(flight.flight_status)
         const flightInfo = {
             flightNumber: Number(flight.flight.number),
             flightDate: `${new Date(flight.flight_date).getFullYear()}-${new Date(flight.flight_date).getMonth() + 1}-${new Date(flight.flight_date).getDate()}`,
@@ -62,7 +61,7 @@ export async function GET(req: NextRequest) {
         }
     }
 
-    console.log("✅ Flight sync completed");
+    console.log("flight sync completed");
     const responseJSON: ResponseBase = {
         isSuccess: true,
         message: 'success'

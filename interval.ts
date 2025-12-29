@@ -39,5 +39,5 @@ setInterval(
             isRunning = false
         }
     },
-    0.25 * 60 * 1000,
+    360 * 60 * 1000,
 )
