@@ -8,7 +8,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     console.log('🛫 fetching flights...');
-    debugger;
     
     const response = await (await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)).json() as AviataionstackFlightsResponse;
     // const response = dummyData;
@@ -20,7 +19,6 @@ export async function GET(request: NextRequest) {
     )
 
     for (const flight of response.data) {
-        debugger;
         const flightInfo = {
             flightNumber: Number(flight.flight.number),
             flightDate: `${new Date(flight.flight_date).getFullYear()}-${new Date(flight.flight_date).getMonth() + 1}-${new Date(flight.flight_date).getDate()}`,
@@ -59,7 +57,6 @@ export async function GET(request: NextRequest) {
 
             console.log(`status change on flight TK${flightInfo.flightNumber}, updated to ${flightInfo.status} from ${existingFlight.status}`);
 
-            // TODO: notify subscribed users via email here
             await notifySubscribedUsers(existingFlight.id);
         }
     }

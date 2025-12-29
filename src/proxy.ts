@@ -1,5 +1,4 @@
 import { JwtPayload } from '@/features/shared/types/jwt-payload.interface';
-import { ResponseBase } from '@/features/shared/types/response/response-base.response';
 import jsonwebtoken from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
  
@@ -15,34 +14,18 @@ export function proxy(request: NextRequest) {
     // }
 
     const jwt = request.cookies.get('jwt')?.value;
-    if (!jwt) {
-        const response: ResponseBase = {
-            isSuccess: false,
-            message: 'no jwt found in cookies'
-        };
-        return NextResponse.json(response);
-    }
+    if (!jwt) return NextResponse.redirect(new URL('/', request.url));;
 
     try {
         const decoded = jsonwebtoken.verify(jwt, process.env.JWT_SECRET!) as JwtPayload;
 
-        if (!decoded.userId) {
-            const response: ResponseBase = {
-                isSuccess: false,
-                message: 'no userId'
-            };
-            return NextResponse.json(response);
-        }
+        if (!decoded.userId) return NextResponse.redirect(new URL('/', request.url));
 
         const response = NextResponse.next();
         response.headers.set('x-user-id', `${decoded.userId}`);
         return response;
     } catch {
-        const response: ResponseBase = {
-            isSuccess: false,
-            message: 'jwt verify threw an error'
-        };
-        return NextResponse.json(response);
+        return NextResponse.redirect(new URL('/', request.url));
     }
 }
  
@@ -51,6 +34,7 @@ export const config = {
         '/api/subscriptions',
         '/api/subscriptions/create',
         // '/api/flights/update',
+        '/api/flights',
         '/flights'
     ],
 };

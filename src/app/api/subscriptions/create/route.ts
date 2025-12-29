@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         );
 
         return NextResponse.json(
-            { isSuccess: true, message: "subscription created" } as ResponseBase
+            { isSuccess: true, message: "subscribed! when any status changes occur, you will automatically get notified via email" } as ResponseBase
         );
 
     } catch (error: any) {

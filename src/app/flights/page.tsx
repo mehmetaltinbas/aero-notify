@@ -1,73 +1,64 @@
 'use client';
 
+import { FlightCard } from '@/features/flights/components/flight-card';
+import { FlightDbRow } from '@/features/flights/types/flight-db-row.interface';
+import { ReadMultipleFlightsResponse } from '@/features/flights/types/response/flights-response.interface';
+import { BlackButton } from '@/features/shared/components/black-button';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function FlightsPage() {
-    const [flights, setFlights] = useState<Array<object>>([]);
+    const [flights, setFlights] = useState<Array<FlightDbRow>>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
-        const fetchFlights = async () => {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_BASE_URL}/flights`
-        );
-        const data = await response.json();
-        setFlights(data.data || []);
-        setIsLoading(false);
+        async function fetchFlights() {
+            const response = await (await fetch(
+                `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights`
+            )).json() as ReadMultipleFlightsResponse;
+            setFlights(response.flights || []);
+            setIsLoading(false);
         };
 
         fetchFlights();
     }, []);
 
-    return ( isLoading ?
-        <div className="flex justify-center items-center min-h-screen text-gray-500">
-        Loading flights...
-        </div>
-        :
-        <main className="min-h-screen bg-gray-100 p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-            Turkish Airlines Flights (TK)
-        </h1>
+    async function handleSignOut() {
+        await fetch('/api/users/sign-out', { method: 'POST' });
+        router.push('/'); // redirect to landing page
+    }
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {flights.map((flight, index) => (
-            <div
-                key={index}
-                className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition"
-            >
-                <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-lg">
-                    {flight.flight.iata}
-                </span>
-                <span className="text-sm px-2 py-1 rounded bg-blue-100 text-blue-700">
-                    {flight.flight_status}
-                </span>
-                </div>
-
-                <div className="text-sm text-gray-600">
-                <p>
-                    <strong>From:</strong> {flight.departure.airport} (
-                    {flight.departure.iata})
-                </p>
-                <p>
-                    <strong>To:</strong> {flight.arrival.airport} (
-                    {flight.arrival.iata})
-                </p>
-                </div>
-
-                <div className="mt-3 text-sm">
-                <p>
-                    <strong>Departure Delay:</strong>{' '}
-                    {flight.departure.delay ?? 0} min
-                </p>
-                <p>
-                    <strong>Arrival Delay:</strong>{' '}
-                    {flight.arrival.delay ?? 0} min
-                </p>
-                </div>
+    if (isLoading) {
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen text-gray-400 text-lg">
+                <div className="animate-pulse mb-4 w-16 h-16 rounded-full bg-gray-300"></div>
+                Loading flights...
             </div>
-            ))}
-        </div>
+        );
+    }
+
+    return (
+        <main className="min-h-screen p-8 bg-gray-50 relative">
+            {/* Sign Out Button */}
+            <div className="absolute top-4 right-4">
+                <BlackButton onClick={async () => await handleSignOut()}>Sign Out</BlackButton>
+            </div>
+
+            {/* Page header */}
+            <div className="max-w-3xl mx-auto text-center mb-8">
+                <h1 className="text-3xl font-bold mb-2">Turkish Airlines Flights (TK)</h1>
+                <p className="text-lg text-gray-600">
+                    Departure: Istanbul Airport &nbsp;•&nbsp; Arrival: Antalya Airport
+                </p>
+            </div>
+
+            {/* Flight list */}
+            <div className="max-w-3xl mx-auto flex flex-col gap-8">
+                {flights.map((flight, index) => (
+                    <FlightCard key={`flight-${flight.id}-${index}`} flight={flight} />
+                ))}
+            </div>
         </main>
     );
 }
