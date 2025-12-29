@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS flights (
 
     "flightNumber" INTEGER NOT NULL,
     "flightDate" DATE NOT NULL,
-    "departureScheduled" TIMESTAMP NOT NULL,
+    "departureScheduled" TIMESTAMPTZ NOT NULL,
 
     status TEXT NOT NULL,
 

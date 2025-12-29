@@ -54,7 +54,7 @@ export const dummyData = {
         },
         {
             flight_date: "2025-12-29",
-            flight_status: "active",
+            flight_status: "landed",
             departure: {
                 airport: "Istanbul Airport",
                 timezone: "Europe/Istanbul",

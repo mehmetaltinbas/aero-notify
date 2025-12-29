@@ -6,13 +6,13 @@ import { NextRequest, NextResponse } from 'next/server';
 export function proxy(request: NextRequest) {
     const path = request.nextUrl.pathname;
 
-    if (path === '/api/flights/update') {
-        const response: ResponseBase = {
-            isSuccess: false,
-            message: "this endpoint isn't reachable, it is an interval endpoint"
-        };
-        return NextResponse.json(response);
-    }
+    // if (path === '/api/flights/update') {
+    //     const response: ResponseBase = {
+    //         isSuccess: false,
+    //         message: "this endpoint isn't reachable, it is an interval endpoint"
+    //     };
+    //     return NextResponse.json(response);
+    // }
 
     const jwt = request.cookies.get('jwt')?.value;
     if (!jwt) {
@@ -50,6 +50,6 @@ export const config = {
     matcher: [
         '/api/subscriptions',
         '/api/subscriptions/create',
-        '/api/flights/update',
+        // '/api/flights/update',
     ],
 };

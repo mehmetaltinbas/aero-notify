@@ -11,6 +11,8 @@ setInterval(
         if (isRunning) return;
         isRunning = true;
 
+        console.log("interval: ", process.env.NEXT_PUBLIC_APP_BASE_URL);
+
         try {
             const client = process.env.NODE_ENV === 'development' ? http : https;
             await new Promise<void>((resolve, reject) => {
@@ -39,5 +41,5 @@ setInterval(
             isRunning = false
         }
     },
-    360 * 60 * 1000,
+    0.15 * 60 * 1000,
 )
