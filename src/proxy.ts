@@ -48,6 +48,7 @@ export function proxy(request: NextRequest) {
  
 export const config = {
     matcher: [
+        '/api/subscriptions',
         '/api/subscriptions/create',
         '/api/flights/update',
     ],
