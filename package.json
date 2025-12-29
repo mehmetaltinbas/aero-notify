@@ -6,7 +6,7 @@
         "dev": "tsx server.ts",
         "dev:debug": "tsx --inspect server.ts",
         "build": "next build",
-        "start": "NODE_ENV=production node --loader tsx server.ts",
+        "start": "NODE_ENV=production node --import tsx server.ts",
         "lint": "eslint",
         "db:up": "docker compose up aero-notify-db -d",
         "db:down": "docker compose down aero-notify-db",
