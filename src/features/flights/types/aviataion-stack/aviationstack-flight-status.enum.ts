@@ -3,5 +3,6 @@ export enum AviationstackFlightStatus {
     Active = "active",
     Cancelled = "cancelled",
     Delayed = "delayed",
-    Landed = "landed"
+    Landed = "landed",
+    Unknown = 'unknown'
 }
