@@ -1,16 +1,17 @@
 import { db } from "@/db";
 import { AviationstackFlightStatus } from "@/features/flights/types/aviataion-stack/aviationstack-flight-status.enum";
+import { AviataionstackFlightsResponse } from "@/features/flights/types/aviataion-stack/aviationstack-flights-response.interface";
 import { FlightDbRow } from "@/features/flights/types/flight-db-row.interface";
 import { ResponseBase } from "@/features/shared/types/response/response-base.response";
 import { notifySubscribedUsers } from "@/features/subscriptions/utilities/notify-subscribed-users.util";
 import { NextRequest, NextResponse } from "next/server";
-import { dummyData } from "../../../../../dummy-data";
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
     console.log('🛫 fetching flights...');
+    debugger;
     
-    // const response = await (await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)).json() as AviataionstackFlightsResponse;
-    const response = dummyData;
+    const response = await (await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)).json() as AviataionstackFlightsResponse;
+    // const response = dummyData;
 
     console.log(`found ${response.data.length} Antalya flights`);
 
@@ -19,6 +20,7 @@ export async function GET(req: NextRequest) {
     )
 
     for (const flight of response.data) {
+        debugger;
         const flightInfo = {
             flightNumber: Number(flight.flight.number),
             flightDate: `${new Date(flight.flight_date).getFullYear()}-${new Date(flight.flight_date).getMonth() + 1}-${new Date(flight.flight_date).getDate()}`,

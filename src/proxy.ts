@@ -51,5 +51,6 @@ export const config = {
         '/api/subscriptions',
         '/api/subscriptions/create',
         // '/api/flights/update',
+        '/flights'
     ],
 };

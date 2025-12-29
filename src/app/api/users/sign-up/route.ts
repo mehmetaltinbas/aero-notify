@@ -17,13 +17,13 @@ export async function POST(req: Request) {
 
         const response: ResponseBase = {
             isSuccess: true,
-            message: 'User created'
+            message: 'signed up'
         }
         return NextResponse.json(response);
     } catch {
         const response: ResponseBase = {
             isSuccess: false,
-            message: 'User already exists'
+            message: 'error'
         }
         return NextResponse.json(response);
     }

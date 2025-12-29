@@ -14,14 +14,14 @@ export async function POST(req: Request) {
     );
 
     if (!rows.length) {
-        return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+        return NextResponse.json({ isSuccess: false, message: 'invalid credentials' } as ResponseBase, { status: 401 });
     }
 
     const user = rows[0];
     const isValid = await bcrypt.compare(signInDto.password, user.password);
 
     if (!isValid) {
-        return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+        return NextResponse.json({ isSuccess: false, message: 'invalid credentials' } as ResponseBase, { status: 401 });
     }
 
     const token = jwt.sign(
@@ -30,11 +30,10 @@ export async function POST(req: Request) {
         { expiresIn: '7d' }
     );
 
-    const responseJson: ResponseBase = {
+    const response = NextResponse.json({
         isSuccess: true,
         message: 'Signed in'
-    }
-    const response = NextResponse.json(responseJson);
+    } as ResponseBase);
 
     response.cookies.set({
         name: 'jwt',
