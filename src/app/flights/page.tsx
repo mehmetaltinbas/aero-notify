@@ -12,14 +12,6 @@ export default function FlightsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
-    async function fetchFlights() {
-        const response = await (await fetch(
-            `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights`
-        )).json() as ReadMultipleFlightsResponse;
-        setFlights(response.flights || []);
-        setIsLoading(false);
-    };
-
     useEffect(() => {
         async function fetchFlights() {
             const response = await (await fetch(
@@ -27,14 +19,14 @@ export default function FlightsPage() {
             )).json() as ReadMultipleFlightsResponse;
             setFlights(response.flights || []);
             setIsLoading(false);
-        };
+        }
 
         fetchFlights();
     }, []);
 
     async function handleSignOut() {
         await fetch('/api/users/sign-out', { method: 'POST' });
-        router.push('/'); // redirect to landing page
+        router.push('/');
     }
 
     if (isLoading) {
@@ -47,24 +39,27 @@ export default function FlightsPage() {
     }
 
     return (
-        <main className="min-h-screen p-8 bg-gray-50 relative">
+        <main className="min-h-screen p-4 md:p-8 bg-gray-50 relative">
             {/* Sign Out Button */}
             <div className="absolute top-4 right-4">
-                <BlackButton onClick={async () => await handleSignOut()}>Sign Out</BlackButton>
+                <BlackButton onClick={handleSignOut}>Sign Out</BlackButton>
             </div>
 
             {/* Page header */}
-            <div className="max-w-3xl mx-auto text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2">Turkish Airlines Flights (TK)</h1>
-                <p className="text-lg text-gray-600">
+            <div className="max-w-3xl mx-auto text-center mb-8 px-2">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">Turkish Airlines Flights (TK)</h1>
+                <p className="text-sm sm:text-lg text-gray-600">
                     Departure: Istanbul Airport &nbsp;•&nbsp; Arrival: Antalya Airport
                 </p>
             </div>
 
             {/* Flight list */}
-            <div className="max-w-3xl mx-auto flex flex-col gap-8">
+            <div className="max-w-3xl mx-auto flex flex-col gap-6 px-2">
                 {flights.map((flight, index) => (
-                    <FlightCard key={`flight-${flight.id}-${index}`} flight={flight} fetchFlights={fetchFlights} />
+                    <FlightCard key={`flight-${flight.id}-${index}`} flight={flight} fetchFlights={async () => {
+                        const response = await (await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights`)).json() as ReadMultipleFlightsResponse;
+                        setFlights(response.flights || []);
+                    }} />
                 ))}
             </div>
         </main>

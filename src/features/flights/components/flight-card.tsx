@@ -23,35 +23,35 @@ export function FlightCard({ flight, fetchFlights }: {
             body: JSON.stringify({ flightId: flight.id })
         })).json() as ResponseBase;
         alert(response.message);
-        await fetchFlights()
+        await fetchFlights();
     }
 
     return (
-        <div className="w-[700px] bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="w-full md:w-full bg-white rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-2xl transition-all duration-300">
             {/* Flight header */}
-            <div className="w-[400px] flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold">Flight {flight.flightNumber}</h3>
-                <span className="text-gray-800">{flightDate}</span>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2 sm:gap-0">
+                <h3 className="text-lg sm:text-xl font-semibold">Flight {flight.flightNumber}</h3>
+                <span className="text-gray-800 text-sm sm:text-base">{flightDate}</span>
             </div>
 
             {/* Flight details */}
-            <div className="grid grid-cols-2 gap-6 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <p className="text-gray-500 text-sm">Departure time</p>
-                    <p className="font-medium">{departureTime}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">Departure time</p>
+                    <p className="font-medium text-sm sm:text-base">{departureTime}</p>
                 </div>
                 <div>
-                    <p className="text-gray-500 text-sm">Status</p>
-                    <p className="font-medium">{flight.status}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">Status</p>
+                    <p className="font-medium text-sm sm:text-base">{flight.status}</p>
                 </div>
             </div>
 
             {/* Subscribe button */}
             <div className="flex justify-end">
                 {!flight.isSubscribed ? 
-                    <BlackButton onClick={async (event) => await handleSubscribe()}>Subscribe</BlackButton>
+                    <BlackButton onClick={handleSubscribe}>Subscribe</BlackButton>
                     :
-                    <div className="cursor-default rounded-full bg-gray-400 px-4 py-2 text-sm text-white transition">
+                    <div className="cursor-default rounded-full bg-gray-400 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm text-white transition">
                         Already Subscribed
                     </div>
                 }
