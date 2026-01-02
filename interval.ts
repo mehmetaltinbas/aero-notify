@@ -11,10 +11,9 @@ setInterval(
         if (isRunning) return;
         isRunning = true;
 
-        console.log("interval: ", process.env.NEXT_PUBLIC_APP_BASE_URL);
-
         try {
-            const client = process.env.NODE_ENV === 'development' ? http : https;
+            const url = new URL(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights/update`);
+            const client = url.protocol === 'https:' ? https : http;
             await new Promise<void>((resolve, reject) => {
                 client
                     .get(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/flights/update`, (res) => {

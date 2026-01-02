@@ -9,7 +9,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
     console.log('🛫 fetching flights...');
     
-    const response = await (await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)).json() as AviataionstackFlightsResponse;
+    const response = await (
+        await fetch(`${process.env.AVIATION_STACK_API_BASE_URL}?access_key=${process.env.AVIATIONSTACK_API_KEY}&airline_iata=TK&dep_iata=IST&arr_iata=AYT`)
+    ).json() as AviataionstackFlightsResponse;
     // const response = dummyData;
 
     console.log(`found ${response.data.length} Antalya flights`);
@@ -24,7 +26,9 @@ export async function GET(request: NextRequest) {
             flightDate: `${new Date(flight.flight_date).getFullYear()}-${new Date(flight.flight_date).getMonth() + 1}-${new Date(flight.flight_date).getDate()}`,
             departureScheduled: new Date(flight.departure.scheduled).toISOString(),
             status: flight.flight_status && flight.flight_status !== 'unknown' ? flight.flight_status : (
-                new Date(flight.departure.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Scheduled : new Date(flight.arrival.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Active : AviationstackFlightStatus.Landed
+                new Date(flight.departure.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Scheduled 
+                    : new Date(flight.arrival.scheduled).getTime() - new Date().getTime() > 0 ? AviationstackFlightStatus.Active 
+                        : AviationstackFlightStatus.Landed
             ),
         }
 
